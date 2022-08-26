@@ -1,7 +1,68 @@
 version: '3.3'
+
+volumes:
+  pg-data:
+
 services:
+  nerves_hub_ca:
+    image: nerves_hub_ca:latest
+    ports:
+      - 8443:8443
+    environment:
+      HOST: ca.nerves-hub
+      PORT: 8443
+      DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_ca"
+    volumes:
+      - ${PWD}/etc/ssl:/etc/ssl
+
+  nerves_hub_api:
+    image: nerves_hub_api:latest
+    ports:
+      - 4444:4444
+    environment:
+      HOST: api.nerves-hub.org
+      PORT: 4444
+      DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_web"
+      CA_HOST: ca.nerves-hub
+      NERVESHUB_SSL_KEY: "/etc/ssl/root-ca-key.pem"
+      NERVESHUB_SSL_CERT: "/etc/ssl/root-ca.pem"
+      NERVESHUB_SSL_CACERT: "/etc/ssl/ca.pem"
+    volumes:
+      - ${PWD}/etc/ssl:/etc/ssl
+
+  nerves_hub_device:
+    image: nerves_hub_device:latest
+    ports:
+      - 4445:4445
+    environment:
+      HOST: device.nerves-hub.org
+      PORT: 4445
+      DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_web"
+      CA_HOST: ca.nerves-hub
+      NERVESHUB_SSL_KEY: "/etc/ssl/root-ca-key.pem"
+      NERVESHUB_SSL_CERT: "/etc/ssl/root-ca.pem"
+      NERVESHUB_SSL_CACERT: "/etc/ssl/ca.pem"
+    volumes:
+      - ${PWD}/etc/ssl:/etc/ssl
+
+  nerves_hub_www:
+    image: nerves_hub_www:latest
+    ports:
+      - 8080:80
+    environment:
+      HOST: nerves-hub.org
+      PORT: 80
+      DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_web"
+      SECRET_KEY_BASE: "03285X8MQ01dU8oO56pnpwgnL4eH70sTohga1bFb2mu/UKlkswnkGN9D/ZLLpgwX"
+      LIVE_VIEW_SIGNING_SALT: "U7UeQwpezh0Fm5U7ZvuWm99ttXzuFC9TyoftI2Edmw4Yo0L7EKRtMvdm8UFJ7LS0"
+      NERVESHUB_SSL_KEY: "/etc/ssl/root-ca-key.pem"
+      NERVESHUB_SSL_CERT: "/etc/ssl/root-ca.pem"
+      NERVESHUB_SSL_CACERT: "/etc/ssl/ca.pem"
+    volumes:
+      - ${PWD}/etc/ssl:/etc/ssl
+
   postgres:
-    image: mdillon/postgis:10
+    image: postgres:10-alpine
     ports:
       - "2345:5432"
     environment:
@@ -10,4 +71,4 @@ services:
       POSTGRES_DB: db
       PGDATA: /data
     volumes:
-      - ~/db/nerveshub/postgres:/data
+      - pg-data:/pg-data

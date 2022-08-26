@@ -56,4 +56,9 @@ test-watch: .env
 	. ./.env && \
 	mix test.watch
 
-.PHONY: test rebuild-db reset-db reset-test-db mix iex-server server help
+images:
+	docker build -f Dockerfile.api -t nerves_hub_api:latest .
+	docker build -f Dockerfile.device -t nerves_hub_device:latest .
+	docker build -f Dockerfile.www -t nerves_hub_www:latest .
+
+.PHONY: test rebuild-db reset-db reset-test-db mix iex-server server help images

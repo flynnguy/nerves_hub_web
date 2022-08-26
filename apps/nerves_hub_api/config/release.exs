@@ -30,19 +30,19 @@ end
 config :nerves_hub_web_core,
   from_email: System.get_env("FROM_EMAIL", "no-reply@nerves-hub.org")
 
-config :nerves_hub_web_core, NervesHubWebCore.Firmwares.Upload.S3,
-  bucket: System.fetch_env!("S3_BUCKET_NAME")
+# config :nerves_hub_web_core, NervesHubWebCore.Firmwares.Upload.S3,
+#   bucket: System.fetch_env!("S3_BUCKET_NAME")
 
-config :nerves_hub_web_core, NervesHubWebCore.Workers.FirmwaresTransferS3Ingress,
-  bucket: System.fetch_env!("S3_LOG_BUCKET_NAME")
+# config :nerves_hub_web_core, NervesHubWebCore.Workers.FirmwaresTransferS3Ingress,
+#   bucket: System.fetch_env!("S3_LOG_BUCKET_NAME")
 
-config :nerves_hub_web_core, NervesHubWebCore.Mailer,
-  adapter: Bamboo.SMTPAdapter,
-  server: System.fetch_env!("SES_SERVER"),
-  port: System.fetch_env!("SES_PORT"),
-  username: System.fetch_env!("SMTP_USERNAME"),
-  password: System.fetch_env!("SMTP_PASSWORD"),
-  allow_signups?: System.get_env("ALLOW_SIGNUPS", "false") |> String.to_atom()
+# config :nerves_hub_web_core, NervesHubWebCore.Mailer,
+#   adapter: Bamboo.SMTPAdapter,
+#   server: System.fetch_env!("SES_SERVER"),
+#   port: System.fetch_env!("SES_PORT"),
+#   username: System.fetch_env!("SMTP_USERNAME"),
+#   password: System.fetch_env!("SMTP_PASSWORD"),
+#   allow_signups?: System.get_env("ALLOW_SIGNUPS", "false") |> String.to_atom()
 
 host = System.fetch_env!("HOST")
 
@@ -60,7 +60,7 @@ cacerts =
 config :nerves_hub_api, NervesHubAPIWeb.Endpoint,
   url: [host: host],
   https: [
-    port: 443,
+    port: 4444,
     otp_app: :nerves_hub_api,
     # Enable client SSL
     verify: :verify_peer,

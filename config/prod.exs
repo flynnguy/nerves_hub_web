@@ -5,8 +5,8 @@ config :logger, level: :info
 
 config :rollbax,
   environment: to_string(Mix.env()),
-  enabled: true,
-  enable_crash_reports: true
+  enabled: false,
+  enable_crash_reports: false
 
 ##
 # NervesHub API
@@ -24,7 +24,7 @@ config :nerves_hub_device, NervesHubDeviceWeb.Endpoint, server: true
 config :nerves_hub_web_core,
   enable_workers: true,
   firmware_upload: NervesHubWebCore.Firmwares.Upload.S3,
-  host: "www.nerves-hub.org",
+  host: "retail.nerves-hub",
   port: 80
 
 config :nerves_hub_web_core, NervesHubWebCore.Mailer,
