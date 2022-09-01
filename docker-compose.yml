@@ -48,7 +48,7 @@ services:
   nerves_hub_www:
     image: nerves_hub_www:latest
     ports:
-      - 8080:80
+      - 8080:4000
     environment:
       HOST: nerves-hub.org
       PORT: 80
@@ -58,8 +58,8 @@ services:
       NERVESHUB_SSL_KEY: "/etc/ssl/root-ca-key.pem"
       NERVESHUB_SSL_CERT: "/etc/ssl/root-ca.pem"
       NERVESHUB_SSL_CACERT: "/etc/ssl/ca.pem"
-    volumes:
-      - ${PWD}/etc/ssl:/etc/ssl
+    # volumes:
+    #   - ${PWD}/etc/ssl:/etc/ssl
 
   postgres:
     image: postgres:10-alpine

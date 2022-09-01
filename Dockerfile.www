@@ -6,42 +6,31 @@ ARG KERL_CONFIGURE_OPTIONS="--disable-debug --without-javac"
 ARG KERL_BUILD_DOCS="yes"
 ARG ERL_AFLAGS="+pc unicode -kernel shell_history enabled -kernel shell_history_path '\"$HOME/.erl_history\"'"
 
-# Elixir build container
 FROM hexpm/elixir:${ELIXIR_VERSION}-erlang-${ERLANG_VERSION}-alpine-${ALPINE_VERSION} as builder
 
 ENV KERL_CONFIGURE_OPTIONS="--disable-debug --without-javac"
-# ARG KERL_BUILD_DOCS="yes"
-# ARG ERL_AFLAGS="+pc unicode -kernel shell_history enabled -kernel shell_history_path '\"$HOME/.erl_history\"'"
-ENV MIX_ENV=prod
 
-
-WORKDIR /build
-RUN apk --no-cache add make gcc musl-dev git nodejs npm
-RUN mix local.hex --force && mix local.rebar --force
-COPY . /build
-
-RUN mix deps.clean --all && mix deps.get
-RUN mix assets.install
-RUN mix release nerves_hub_www --overwrite
-
-# Release Container
-# FROM nerveshub/runtime:alpine-${ALPINE_VERSION} as release
-FROM alpine:${ALPINE_VERSION} as release
-
-ENV MIX_ENV=prod
-ENV PORT=${PORT}
-ENV HOST=${CA_NERVES_HOST}
-ENV DATABASE_URL=${DATABASE_URL}
-
-RUN apk --no-cache add gcc ncurses-libs
+# Eventually we want to change this to prod and create a "realease" with multi stage builds and all
+# Hoever we ran into issues with that so this is :fingers-crossed: a temporary solution"
+ENV MIX_ENV=dev
 
 WORKDIR /app
+RUN apk --no-cache add make python3 gcc musl-dev git nodejs npm fwup inotify-tools
+# RUN apk --no-cache add gcc ncurses-libs
+RUN mix local.hex --force && mix local.rebar --force
+COPY . /app
 
-COPY --from=builder /build/_build/$MIX_ENV/rel/nerves_hub_www/ ./
-# COPY --from=builder /build/apps/nerves_hub_www/assets
-# COPY --from=builder /build/rel/scripts/s3-entrypoint.sh .
+RUN mix deps.clean --all && mix deps.get
 
-# RUN ["chmod", "+x", "/app/s3-entrypoint.sh"]
+WORKDIR /app/apps/nerves_hub_www/assets
+RUN npm rebuild node-sass && npm install
+WORKDIR /app
+RUN mix assets.setup
 
-# ENTRYPOINT ["/app/s3-entrypoint.sh"]
-CMD ["./bin/nerves_hub_www", "start"]
+ENV PORT=4000
+ENV DATABASE_URL="postgres://db:db@postgres:5432/nerves_hub_www"
+ENV HOST="localhost"
+ENV LIVE_VIEW_SIGNING_SALT="CKhrfSM/6C7dgXNEzJbCRT1QQuM+N1pp"
+ENV SECRET_KEY_BASE="3uRRXQ9FUMc3dd7NFTFWQU2xRXcVFXWpPLHZ4fdG/toP9/jJL92Mtjmq8Fd/ijZe"
+
+CMD ["mix", "phx.server"]
