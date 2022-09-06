@@ -47,8 +47,8 @@ config :nerves_hub_web_core,
 host = System.fetch_env!("HOST")
 
 cacert_pems = [
-  "/etc/ssl/user-root-ca.pem",
-  "/etc/ssl/root-ca.pem"
+  "/etc/ssl/nerveshub/user-root-ca.pem",
+  "/etc/ssl/nerveshub/root-ca.pem"
 ]
 
 cacerts =
@@ -64,8 +64,8 @@ config :nerves_hub_api, NervesHubAPIWeb.Endpoint,
     otp_app: :nerves_hub_api,
     # Enable client SSL
     verify: :verify_peer,
-    keyfile: "/etc/ssl/#{host}-key.pem",
-    certfile: "/etc/ssl/#{host}.pem",
+    keyfile: "/etc/ssl/nerveshub/#{host}-key.pem",
+    certfile: "/etc/ssl/nerveshub/#{host}.pem",
     cacerts: cacerts ++ :certifi.cacerts()
   ]
 
@@ -75,7 +75,7 @@ config :nerves_hub_web_core, NervesHubWebCore.CertificateAuthority,
   host: ca_host,
   port: 8443,
   ssl: [
-    keyfile: "/etc/ssl/#{host}-key.pem",
-    certfile: "/etc/ssl/#{host}.pem",
-    cacertfile: "/etc/ssl/ca.pem"
+    keyfile: "/etc/ssl/nerveshub/#{host}-key.pem",
+    certfile: "/etc/ssl/nerveshub/#{host}.pem",
+    cacertfile: "/etc/ssl/nerveshub/ca.pem"
   ]

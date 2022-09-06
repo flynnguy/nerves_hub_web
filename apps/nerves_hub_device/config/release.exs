@@ -49,9 +49,9 @@ config :nerves_hub_device, NervesHubDeviceWeb.Endpoint,
     # Enable client SSL
     verify: :verify_peer,
     fail_if_no_peer_cert: true,
-    keyfile: "/etc/ssl/#{host}-key.pem",
-    certfile: "/etc/ssl/#{host}.pem",
-    cacertfile: "/etc/ssl/ca.pem"
+    keyfile: "/etc/ssl/nerveshub/#{host}-key.pem",
+    certfile: "/etc/ssl/nerveshub/#{host}.pem",
+    cacertfile: "/etc/ssl/nerveshub/ca.pem"
   ]
 
 ca_host = System.fetch_env!("CA_HOST")
