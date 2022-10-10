@@ -1,23 +1,13 @@
+---
 version: '3.3'
 
 volumes:
   pg-data:
 
 services:
-  nerves_hub_ca:
-    image: nerves_hub_ca:latest
-    ports:
-      - 8443:8443
-    environment:
-      HOST: ca.nerves-hub
-      PORT: 8443
-      DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_ca"
-      NERVES_HUB_CA_DIR: "/etc/ssl/nerveshub"
-    volumes:
-      - ${PWD}/etc/ssl:/etc/ssl/nerveshub/
-
   nerves_hub_api:
     image: nerves_hub_api:latest
+    hostname: api.nerves-hub.org
     ports:
       - 4444:4444
     environment:
@@ -34,6 +24,7 @@ services:
 
   nerves_hub_device:
     image: nerves_hub_device:latest
+    hostname: device.nerves-hub.org
     ports:
       - 4445:4445
     environment:
@@ -50,6 +41,7 @@ services:
 
   nerves_hub_www:
     image: nerves_hub_www:latest
+    hostname: www.nerves-hub.org
     ports:
       - 8080:4000
     environment:
