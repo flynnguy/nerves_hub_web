@@ -7,53 +7,47 @@ volumes:
 services:
   nerves_hub_api:
     image: nerves_hub_api:latest
-    hostname: api.nerves-hub.org
+    hostname: api.${DOMAIN}
     ports:
       - 4444:4444
     environment:
-      HOST: api.nerves-hub.org
+      HOST: api.${DOMAIN}
       PORT: 4444
       DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_web"
       CA_HOST: ca.nerves-hub
-      NERVESHUB_SSL_KEY: "/etc/ssl/nerveshub/root-ca-key.pem"
-      NERVESHUB_SSL_CERT: "/etc/ssl/nerveshub/root-ca.pem"
-      NERVESHUB_SSL_CACERT: "/etc/ssl/nerveshub/ca.pem"
       NERVES_HUB_CA_DIR: "/etc/ssl/nerveshub"
+      NERVES_HUB_DOMAIN: ${DOMAIN}
     volumes:
       - ${PWD}/etc/ssl:/etc/ssl/nerveshub/
 
   nerves_hub_device:
     image: nerves_hub_device:latest
-    hostname: device.nerves-hub.org
+    hostname: device.${DOMAIN}
     ports:
       - 4445:4445
     environment:
-      HOST: device.nerves-hub.org
+      HOST: device.${DOMAIN}
       PORT: 4445
       DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_web"
       CA_HOST: ca.nerves-hub
-      NERVESHUB_SSL_KEY: "/etc/ssl/nerveshub/root-ca-key.pem"
-      NERVESHUB_SSL_CERT: "/etc/ssl/nerveshub/root-ca.pem"
-      NERVESHUB_SSL_CACERT: "/etc/ssl/nerveshub/ca.pem"
       NERVES_HUB_CA_DIR: "/etc/ssl/nerveshub"
+      NERVES_HUB_DOMAIN: ${DOMAIN}
     volumes:
       - ${PWD}/etc/ssl:/etc/ssl/nerveshub/
 
   nerves_hub_www:
     image: nerves_hub_www:latest
-    hostname: www.nerves-hub.org
+    hostname: www.${DOMAIN}
     ports:
       - 8080:4000
     environment:
-      HOST: nerves-hub.org
+      HOST: ${DOMAIN}
       PORT: 80
       DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_web"
       SECRET_KEY_BASE: "03285X8MQ01dU8oO56pnpwgnL4eH70sTohga1bFb2mu/UKlkswnkGN9D/ZLLpgwX"
       LIVE_VIEW_SIGNING_SALT: "U7UeQwpezh0Fm5U7ZvuWm99ttXzuFC9TyoftI2Edmw4Yo0L7EKRtMvdm8UFJ7LS0"
-      NERVESHUB_SSL_KEY: "/etc/ssl/nerveshub/root-ca-key.pem"
-      NERVESHUB_SSL_CERT: "/etc/ssl/nerveshub/root-ca.pem"
-      NERVESHUB_SSL_CACERT: "/etc/ssl/nerveshub/ca.pem"
       NERVES_HUB_CA_DIR: "/etc/ssl/nerveshub"
+      NERVES_HUB_DOMAIN: ${DOMAIN}
     volumes:
       - ${PWD}/etc/ssl:/etc/ssl/nerveshub/
 
