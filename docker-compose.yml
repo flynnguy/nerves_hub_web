@@ -5,41 +5,13 @@ volumes:
   pg-data:
 
 services:
-  nerves_hub_api:
-    image: nerves_hub_api:latest
-    hostname: api.${DOMAIN}
-    ports:
-      - 4444:4444
-    environment:
-      HOST: api.${DOMAIN}
-      PORT: 4444
-      DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_web"
-      CA_HOST: ca.nerves-hub
-      NERVES_HUB_CA_DIR: "/etc/ssl/nerveshub"
-      NERVES_HUB_DOMAIN: ${DOMAIN}
-    volumes:
-      - ${PWD}/etc/ssl:/etc/ssl/nerveshub/
-
-  nerves_hub_device:
-    image: nerves_hub_device:latest
-    hostname: device.${DOMAIN}
-    ports:
-      - 4445:4445
-    environment:
-      HOST: device.${DOMAIN}
-      PORT: 4445
-      DATABASE_URL: "ecto://db:db@postgres:5432/nerves_hub_web"
-      CA_HOST: ca.nerves-hub
-      NERVES_HUB_CA_DIR: "/etc/ssl/nerveshub"
-      NERVES_HUB_DOMAIN: ${DOMAIN}
-    volumes:
-      - ${PWD}/etc/ssl:/etc/ssl/nerveshub/
-
   nerves_hub_www:
     image: nerves_hub_www:latest
-    hostname: www.${DOMAIN}
+    hostname: ${DOMAIN}
     ports:
-      - 8080:4000
+      - 4000:4000
+      - 4001:4001
+      - 4002:4002
     environment:
       HOST: ${DOMAIN}
       PORT: 80
