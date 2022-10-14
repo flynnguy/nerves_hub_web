@@ -60,7 +60,6 @@ cacerts =
 config :nerves_hub_api, NervesHubAPIWeb.Endpoint,
   url: [host: host],
   https: [
-    port: 4444,
     otp_app: :nerves_hub_api,
     # Enable client SSL
     verify: :verify_peer,

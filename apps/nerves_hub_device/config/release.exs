@@ -44,7 +44,6 @@ host = System.fetch_env!("HOST")
 config :nerves_hub_device, NervesHubDeviceWeb.Endpoint,
   url: [host: host],
   https: [
-    port: 4445,
     otp_app: :nerves_hub_device,
     # Enable client SSL
     versions: [:"tlsv1.2"],
